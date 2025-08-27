@@ -118,6 +118,15 @@ cd king-living-orders-system
 npm run setup
 ```
 
+2. **Configure environment variables:**
+```bash
+# Copy the example environment file
+cp client/.env.example client/.env
+
+# Edit the API endpoint if needed (default: http://localhost:3001)
+# VITE_API_BASE_URL=http://localhost:3001
+```
+
 2. **Start both client and server:**
 ```bash
 npm run dev
@@ -260,7 +269,7 @@ The result is a well-architected, maintainable application that demonstrates the
 - The server generates realistic mock data using Faker.js
 - All data is in-memory (no database required)
 - CORS is enabled for local development
-- The client automatically connects to `http://localhost:3001` for API calls
+- The client uses environment variables for API configuration (see `client/.env.example`)
 - All calculations happen server-side for better performance and consistency
 
 # klexam

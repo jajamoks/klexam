@@ -63,9 +63,10 @@ This project was built entirely using AI assistance. Below are the exact prompts
 
 ### Architecture Decisions
 
-1. **Monorepo Structure**
+1. **Monorepo Structure (Development Only)**
    - **Decision**: Used a root `package.json` with workspaces for `client` and `server`
    - **Reasoning**: Easier dependency management and concurrent development
+   - **Production**: Separate deployments recommended for scalability and performance
 
 2. **Single Responsibility Principle (SRP)**
    - **Decision**: Broke down large components into smaller, focused ones
@@ -176,6 +177,44 @@ king-living-orders-system/
 │   └── package.json
 └── package.json            # Root package.json with concurrently
 ```
+
+## 🚀 Deployment Strategy
+
+### **Development (Monorepo)**
+- **Structure**: Single repository with `client/` and `server/` directories
+- **Purpose**: Local development, testing, and code sharing
+- **Benefits**: 
+  - Shared TypeScript types between frontend and backend
+  - Concurrent development with `npm run dev`
+  - Single source of truth for project configuration
+
+### **Production (Separate Deployments)**
+- **Recommended Approach**: Deploy client and server separately
+- **Client Deployment**: 
+  - Build static files: `npm run build:client`
+  - Deploy to CDN/static hosting (Netlify, Vercel, AWS S3, etc.)
+  - Configure environment variables for API endpoint
+- **Server Deployment**:
+  - Build server: `npm run build:server`
+  - Deploy to cloud platform (Heroku, AWS EC2, Google Cloud, etc.)
+  - Configure CORS for production domain
+  - Set up environment variables for production settings
+
+### **Environment Configuration**
+```bash
+# Development
+VITE_API_BASE_URL=http://localhost:3001
+
+# Production
+VITE_API_BASE_URL=https://api.kingliving.com
+```
+
+### **Benefits of Separate Deployments**
+- ✅ **Scalability**: Frontend and backend can scale independently
+- ✅ **Performance**: Static frontend served from CDN
+- ✅ **Security**: Backend isolated with proper security measures
+- ✅ **Cost Optimization**: Use appropriate hosting for each part
+- ✅ **Maintenance**: Independent updates and deployments
 
 ## 🌐 API Endpoints
 

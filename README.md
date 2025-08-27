@@ -2,6 +2,10 @@
 
 A unified dashboard for viewing orders from King Living's three commerce instances (APAC, UK, US) built with React and Express.js.
 
+![King Living Orders Dashboard](./docs/screenshots/dashboard-screenshot.png)
+
+*King Living Orders Dashboard - Unified view of orders across APAC, UK, and US regions*
+
 ## 🤖 AI Development Journey
 
 This project was built entirely using AI assistance. Below are the exact prompts used throughout the development process.

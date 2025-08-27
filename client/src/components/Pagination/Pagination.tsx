@@ -12,6 +12,47 @@ export const Pagination: React.FC<PaginationProps> = ({
   regionBreakdown,
   onPageChange,
 }) => {
+  const generatePageNumbers = () => {
+    const { currentPage, totalPages } = pagination;
+    const pages: (number | string)[] = [];
+
+    if (totalPages <= 7) {
+      // Show all pages if 7 or fewer
+      for (let i = 1; i <= totalPages; i++) {
+        pages.push(i);
+      }
+    } else {
+      // Smart pagination with ellipsis
+      pages.push(1); // Always show first page
+
+      if (currentPage > 4) {
+        pages.push("..."); // Show ellipsis if current page is far from start
+      }
+
+      // THIS IS WHERE YOUR CODE COMES IN:
+      const start = Math.max(2, currentPage - 1);
+      const end = Math.min(totalPages - 1, currentPage + 1);
+      for (let i = start; i <= end; i++) {
+        if (i !== 1 && i !== totalPages) {
+          // Skip first and last (shown separately)
+          pages.push(i);
+        }
+      }
+
+      if (currentPage < totalPages - 3) {
+        pages.push("..."); // Show ellipsis if current page is far from end
+      }
+
+      if (totalPages > 1) {
+        pages.push(totalPages); // Always show last page
+      }
+    }
+
+    return pages;
+  };
+
+  const pageNumbers = generatePageNumbers();
+
   return (
     <div className="bg-white px-4 py-3 border-t border-gray-200 sm:px-6">
       <div className="flex items-center justify-between">
@@ -40,6 +81,7 @@ export const Pagination: React.FC<PaginationProps> = ({
             ))}
           </div>
         </div>
+
         <div className="flex items-center space-x-2">
           <button
             onClick={() => onPageChange(pagination.currentPage - 1)}
@@ -48,28 +90,31 @@ export const Pagination: React.FC<PaginationProps> = ({
           >
             Previous
           </button>
+
           <div className="flex items-center space-x-1">
-            {Array.from(
-              { length: Math.min(5, pagination.totalPages) },
-              (_, i) => {
-                const pageNum = i + 1;
-                const isActive = pageNum === pagination.currentPage;
-                return (
-                  <button
-                    key={pageNum}
-                    onClick={() => onPageChange(pageNum)}
-                    className={`relative inline-flex items-center px-3 py-2 border text-sm font-medium rounded-md ${
-                      isActive
-                        ? "border-blue-500 bg-blue-50 text-blue-600"
-                        : "border-gray-300 text-gray-700 bg-white hover:bg-gray-50"
-                    }`}
-                  >
-                    {pageNum}
-                  </button>
-                );
-              }
-            )}
+            {pageNumbers.map((pageNum, index) => (
+              <button
+                key={index}
+                onClick={() =>
+                  typeof pageNum === "number"
+                    ? onPageChange(pageNum)
+                    : undefined
+                }
+                disabled={typeof pageNum === "string"}
+                className={`relative inline-flex items-center px-3 py-2 border text-sm font-medium rounded-md ${
+                  typeof pageNum === "number" &&
+                  pageNum === pagination.currentPage
+                    ? "border-blue-500 bg-blue-50 text-blue-600"
+                    : typeof pageNum === "string"
+                    ? "border-transparent text-gray-400 cursor-default"
+                    : "border-gray-300 text-gray-700 bg-white hover:bg-gray-50"
+                }`}
+              >
+                {pageNum}
+              </button>
+            ))}
           </div>
+
           <button
             onClick={() => onPageChange(pagination.currentPage + 1)}
             disabled={!pagination.hasNext}
